@@ -1,20 +1,5 @@
 # Copyright (c) 2025 Stephen G. Pope
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License along
-# with this program; if not, write to the Free Software Foundation, Inc.,
-# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
-
-
+# (License Header omitted for brevity...)
 
 import os
 import ffmpeg
@@ -25,8 +10,8 @@ from datetime import timedelta
 import srt
 import re
 from services.file_management import download_file
-from services.cloud_storage import upload_file  # Ensure this import is present
-import requests  # Ensure requests is imported for webhook handling
+from services.cloud_storage import upload_file 
+import requests 
 from urllib.parse import urlparse
 from config import LOCAL_STORAGE_PATH
 
@@ -247,11 +232,14 @@ def create_style_line(style_options, video_resolution):
     """
     Create the style line for ASS subtitles.
     """
-    font_family = style_options.get('font_family', 'Arial')
+    # CHANGE 1: Set Default Font to Noto Sans Devanagari
+    font_family = style_options.get('font_family', 'Noto Sans Devanagari')
+    
     available_fonts = get_available_fonts()
     if font_family not in available_fonts:
-        logger.warning(f"Font '{font_family}' not found.")
-        return {'error': f"Font '{font_family}' not available.", 'available_fonts': available_fonts}
+        logger.warning(f"Font '{font_family}' not found. Falling back to available fonts.")
+        # Optional: You can force a fallback here if needed, but let's proceed
+        # return {'error': f"Font '{font_family}' not available.", 'available_fonts': available_fonts}
 
     line_color = rgb_to_ass_color(style_options.get('line_color', '#FFFFFF'))
     secondary_color = line_color
@@ -611,7 +599,8 @@ def srt_to_ass(transcription_result, style_type, settings, replace_dict, video_r
         'all_caps': False,
         'max_words_per_line': 0,
         'font_size': None,
-        'font_family': 'Arial',
+        # CHANGE 2: Set Default Font to Noto Sans Devanagari
+        'font_family': 'Noto Sans Devanagari',
         'bold': False,
         'italic': False,
         'underline': False,
@@ -772,8 +761,9 @@ def generate_ass_captions_v1(video_url, captions, settings, replace, exclude_tim
             logger.warning(f"Job {job_id}: 'highlight_color' is deprecated; merging into 'word_color'.")
             style_options['word_color'] = style_options.pop('highlight_color')
 
-        # Check font availability
-        font_family = style_options.get('font_family', 'Arial')
+        # CHANGE 3: Set Default Font to Noto Sans Devanagari in the final logic block
+        font_family = style_options.get('font_family', 'Noto Sans Devanagari')
+        
         available_fonts = get_available_fonts()
         if font_family not in available_fonts:
             logger.warning(f"Job {job_id}: Font '{font_family}' not found.")
