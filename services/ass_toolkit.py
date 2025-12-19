@@ -50,22 +50,19 @@ def rgb_to_ass_color(rgb_color):
 def generate_transcription(video_path, language='auto'):
     try:
         model = whisper.load_model("base")
+        
+        # --- FINAL FIX: FORCE HINDI ---
+        # हम बाहर से आने वाले 'language' वेरिएबल को पूरी तरह इग्नोर कर रहे हैं।
+        # हम सीधे 'hi' (Hindi) हार्डकोड कर रहे हैं।
         transcription_options = {
             'word_timestamps': True,
             'verbose': True,
+            'language': 'hi'  # <--- STRICTLY HINDI
         }
         
-        # --- बदलाव (CHANGE) ---
-        # अगर language 'auto' है, तो उसे जबरदस्ती 'hi' (Hindi) करें।
-        if language == 'auto':
-            language = 'hi'
-            
-        # अब यह हमेशा 'hi' सेट करेगा
-        transcription_options['language'] = language
-        # ---------------------
-
+        logger.info(f"Generating transcription strictly in HINDI for: {video_path}")
         result = model.transcribe(video_path, **transcription_options)
-        logger.info(f"Transcription generated strictly in HINDI ({language}) for video: {video_path}")
+        logger.info("Transcription generated successfully in HINDI.")
         return result
     except Exception as e:
         logger.error(f"Error in transcription: {str(e)}")
@@ -246,8 +243,6 @@ def create_style_line(style_options, video_resolution):
     available_fonts = get_available_fonts()
     if font_family not in available_fonts:
         logger.warning(f"Font '{font_family}' not found. Falling back to available fonts.")
-        # Optional: You can force a fallback here if needed, but let's proceed
-        # return {'error': f"Font '{font_family}' not available.", 'available_fonts': available_fonts}
 
     line_color = rgb_to_ass_color(style_options.get('line_color', '#FFFFFF'))
     secondary_color = line_color
