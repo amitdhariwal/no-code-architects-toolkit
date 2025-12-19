@@ -54,10 +54,18 @@ def generate_transcription(video_path, language='auto'):
             'word_timestamps': True,
             'verbose': True,
         }
-        if language != 'auto':
-            transcription_options['language'] = language
+        
+        # --- बदलाव (CHANGE) ---
+        # अगर language 'auto' है, तो उसे जबरदस्ती 'hi' (Hindi) करें।
+        if language == 'auto':
+            language = 'hi'
+            
+        # अब यह हमेशा 'hi' सेट करेगा
+        transcription_options['language'] = language
+        # ---------------------
+
         result = model.transcribe(video_path, **transcription_options)
-        logger.info(f"Transcription generated successfully for video: {video_path}")
+        logger.info(f"Transcription generated strictly in HINDI ({language}) for video: {video_path}")
         return result
     except Exception as e:
         logger.error(f"Error in transcription: {str(e)}")
