@@ -736,10 +736,9 @@ def generate_ass_captions_v1(video_url, captions, settings, replace, exclude_tim
     If PlayResX and PlayResY are provided, use them for ASS generation; otherwise, get from video.
     """
     try:
-
-
-captions = None
-
+        # 👇👇👇 (ध्यान दें: इसके पीछे 4 स्पेस या 1 टैब है) 👇👇👇
+        captions = None
+        # 👆👆👆 अब यह 'if' वाली लाइन की सीध में है 👆👆👆
 
         # Normalize exclude_time_ranges to ensure start/end are floats
         if exclude_time_ranges:
